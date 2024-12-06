@@ -1,0 +1,48 @@
+name: Deploy Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pymysql
+
+      - name: Zip Lambda function
+        run: zip -r lambda_function.zip lambda_function.py
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy with Terraform
+        env:
+          RDS_HOST: ${{ secrets.RDS_HOST }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
+        run: |
+          echo "VAR RD_HOST: $RDS_HOST"
+          echo "VAR RD_USERNAME: $RDS_USERNAME"
+          echo "VAR RD_PASSWORD: $RDS_PASSWORD"
+          echo "VAR RD_DB_NAME: $RDS_DB_NAME"
+          terraform init
+          terraform apply -auto-approve  -var "rds_host=$RDS_HOST" -var "rds_username=$RDS_USERNAME" -var "rds_password=$RDS_PASSWORD" -var "rds_db_name=$RDS_DB_NAME"
