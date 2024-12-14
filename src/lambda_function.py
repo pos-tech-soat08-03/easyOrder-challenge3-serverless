@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     
     connection = pymysql.connect(host=rds_host, user=name, passwd=password, db=db_name)
     
-    cpf = event['cpf']
+    cpf = event['queryStringParameters']['cpf']
     
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM clientes WHERE cpf = %s", (cpf,))
