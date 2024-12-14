@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     
     connection.close()
 
-    print(f"RESULT BATATA:")
+    print(f"RESULT BATATA2:")
     print(result)
 
     if not result:
