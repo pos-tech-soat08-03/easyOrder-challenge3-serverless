@@ -57,4 +57,4 @@ jobs:
           echo "VAR RD_PASSWORD: $RDS_PASSWORD"
           echo "VAR RD_DB_NAME: $RDS_DB_NAME"
           terraform init
-          terraform apply -auto-approve -var "rds_host=$RDS_HOST" -var "rds_username=$RDS_USERNAME" -var "rds_password=$RDS_PASSWORD" -var "rds_db_name=$RDS_DB_NAME" -var "vpc_id=$VPC_ID"
+          terraform apply -auto-approve -var "rds_host=$RDS_HOST" -var "rds_username=$RDS_USERNAME" -var "rds_password=$RDS_PASSWORD" -var "rds_db_name=$RDS_DB_NAME"

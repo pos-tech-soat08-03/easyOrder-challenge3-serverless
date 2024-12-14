@@ -17,12 +17,6 @@ resource "aws_api_gateway_method" "cpf_proxy_method" {
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_stage" "prod_stage" {
-  deployment_id = aws_api_gateway_deployment.cpf_deployment.id
-  rest_api_id   = aws_api_gateway_rest_api.cpf_api.id
-  stage_name    = "PRODUCTION"
-}
-
 resource "aws_api_gateway_integration" "cpf_proxy_integration" {
   rest_api_id             = aws_api_gateway_rest_api.cpf_api.id
   resource_id             = aws_api_gateway_resource.cpf_proxy_resource.id
@@ -35,6 +29,26 @@ resource "aws_api_gateway_integration" "cpf_proxy_integration" {
   ]
 }
 
+resource "aws_api_gateway_deployment" "cpf_deployment" {
+  depends_on = [aws_api_gateway_integration.cpf_proxy_integration]
+  rest_api_id = aws_api_gateway_rest_api.cpf_api.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+  
+  triggers = {
+    redeployment = sha1(jsonencode(aws_api_gateway_integration.cpf_proxy_integration))
+  }
+}
+
+resource "aws_api_gateway_stage" "prod_stage" {
+  deployment_id = aws_api_gateway_deployment.cpf_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.cpf_api.id
+  stage_name    = "PRODUCTION"
+  depends_on    = [aws_api_gateway_deployment.cpf_deployment]
+}
+
 resource "aws_lambda_permission" "allow_api_gateway" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
@@ -42,14 +56,6 @@ resource "aws_lambda_permission" "allow_api_gateway" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_api_gateway_rest_api.cpf_api.execution_arn}/*/*"
-}
-
-resource "aws_api_gateway_deployment" "cpf_deployment" {
-  depends_on = [aws_api_gateway_integration.cpf_proxy_integration]
-  rest_api_id = aws_api_gateway_rest_api.cpf_api.id
-  triggers = {
-    redeployment = sha1(jsonencode(aws_api_gateway_integration.cpf_proxy_integration))
-  }
 }
 
 output "api_gateway_url" {

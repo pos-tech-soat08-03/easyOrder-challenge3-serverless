@@ -1,3 +1,13 @@
+variable "region" {
+  description = "The AWS region to deploy in"
+  type        = string
+  default     = "us-east-1"
+}
+
+provider "aws" {
+  region = var.region
+}
+
 resource "aws_db_instance" "default" {
   allocated_storage    = 20
   engine               = "mysql"
