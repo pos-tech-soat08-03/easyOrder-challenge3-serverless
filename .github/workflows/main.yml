@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pymysql
+          pip install pymysql -t .
 
       - name: Zip Lambda function
         run: zip -r lambda_function.zip lambda_function.py

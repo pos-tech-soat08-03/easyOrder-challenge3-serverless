@@ -1,3 +1,6 @@
+.vscode*
 .terraform*
 terraform.*
 *.zip
+src/*
+!src/lambda_function.py
