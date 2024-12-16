@@ -25,7 +25,8 @@ resource "aws_api_gateway_integration" "root_get_integration" {
   resource_id             = aws_api_gateway_rest_api.api_gateway.root_resource_id
   http_method             = aws_api_gateway_method.root_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/backend-root" # Substitua pelo URL real
+  
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000" # Substitua pelo URL real
   integration_http_method = "GET"
 }
 
@@ -48,7 +49,7 @@ resource "aws_api_gateway_integration" "health_get_integration" {
   resource_id             = aws_api_gateway_resource.health.id
   http_method             = aws_api_gateway_method.health_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/health" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/health" # Substitua pelo URL real
   integration_http_method = "GET"
 }
 
@@ -71,7 +72,7 @@ resource "aws_api_gateway_integration" "docs_get_integration" {
   resource_id             = aws_api_gateway_resource.docs.id
   http_method             = aws_api_gateway_method.docs_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/docs" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/docs" # Substitua pelo URL real
   integration_http_method = "GET"
 }
 
@@ -99,7 +100,7 @@ resource "aws_api_gateway_integration" "cliente_cadastrar_integration" {
   resource_id             = aws_api_gateway_resource.cliente_cadastrar.id
   http_method             = aws_api_gateway_method.cliente_cadastrar.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/cliente-cadastrar" # Altere para o URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/cliente-cadastrar" # Altere para o URL real
   integration_http_method = "POST"
 }
 
@@ -120,7 +121,7 @@ resource "aws_api_gateway_integration" "cliente_atualizar_integration" {
   resource_id             = aws_api_gateway_resource.cliente_atualizar.id
   http_method             = aws_api_gateway_method.cliente_atualizar.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/cliente-atualizar" # Altere para o URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/cliente-atualizar" # Altere para o URL real
   integration_http_method = "PUT"
 }
 
@@ -142,7 +143,7 @@ resource "aws_api_gateway_integration" "cliente_listar_integration" {
   resource_id             = aws_api_gateway_resource.cliente_listar.id
   http_method             = aws_api_gateway_method.cliente_listar.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/cliente-listar" # Altere para o URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/cliente-listar" # Altere para o URL real
   integration_http_method = "GET"
 }
 
@@ -197,7 +198,7 @@ resource "aws_api_gateway_integration" "pagamento_webhook_integration" {
   resource_id             = aws_api_gateway_resource.pagamento_webhook.id
   http_method             = aws_api_gateway_method.pagamento_webhook_post.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/backend-webhook-endpoint" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/backend-webhook-endpoint" # Substitua pelo URL real
   integration_http_method = "POST"
 }
 
@@ -232,7 +233,7 @@ resource "aws_api_gateway_integration" "pagamento_listar_transacoes_pedidoId_int
   resource_id             = aws_api_gateway_resource.pagamento_listar_transacoes_pedidoId.id
   http_method             = aws_api_gateway_method.pagamento_listar_transacoes_pedidoId.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/backend-endpoint/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/backend-endpoint/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "GET"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -258,7 +259,7 @@ resource "aws_api_gateway_integration" "pedido_post_integration" {
   resource_id             = aws_api_gateway_resource.pedido.id
   http_method             = aws_api_gateway_method.pedido_post.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-endpoint" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-endpoint" # Substitua pelo URL real
   integration_http_method = "POST"
 }
 
@@ -291,7 +292,7 @@ resource "aws_api_gateway_integration" "pedido_listar_statusPedido_integration" 
   resource_id             = aws_api_gateway_resource.pedido_listar_statusPedido.id
   http_method             = aws_api_gateway_method.pedido_listar_statusPedido_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-listar-endpoint/{statusPedido}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-listar-endpoint/{statusPedido}" # Substitua pelo URL real
   integration_http_method = "GET"
   request_parameters = {
     "integration.request.path.statusPedido" = "method.request.path.statusPedido"
@@ -322,7 +323,7 @@ resource "aws_api_gateway_integration" "pedido_pedidoId_integration" {
   resource_id             = aws_api_gateway_resource.pedido_pedidoId.id
   http_method             = aws_api_gateway_method.pedido_pedidoId_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-endpoint/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-endpoint/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "GET"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -352,7 +353,7 @@ resource "aws_api_gateway_integration" "pedido_pedidoId_cancelar_integration" {
   resource_id             = aws_api_gateway_resource.pedido_pedidoId_cancelar.id
   http_method             = aws_api_gateway_method.pedido_pedidoId_cancelar_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-cancelar-endpoint/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-cancelar-endpoint/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "PUT"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -381,7 +382,7 @@ resource "aws_api_gateway_integration" "pedido_pedidoId_confirmacao_pagamento_in
   resource_id             = aws_api_gateway_resource.pedido_pedidoId_confirmacao_pagamento.id
   http_method             = aws_api_gateway_method.pedido_pedidoId_confirmacao_pagamento_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-confirmacao-pagamento-endpoint/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-confirmacao-pagamento-endpoint/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "PUT"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -410,7 +411,7 @@ resource "aws_api_gateway_integration" "pedido_pedidoId_checkout_integration" {
   resource_id             = aws_api_gateway_resource.pedido_pedidoId_checkout.id
   http_method             = aws_api_gateway_method.pedido_pedidoId_checkout_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-checkout-endpoint/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-checkout-endpoint/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "PUT"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -439,7 +440,7 @@ resource "aws_api_gateway_integration" "pedido_pedidoId_combo_integration" {
   resource_id             = aws_api_gateway_resource.pedido_pedidoId_combo.id
   http_method             = aws_api_gateway_method.pedido_pedidoId_combo_post.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-combo-endpoint/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-combo-endpoint/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "POST"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -469,7 +470,7 @@ resource "aws_api_gateway_integration" "pedido_pedidoId_combo_comboId_integratio
   resource_id             = aws_api_gateway_resource.pedido_pedidoId_combo_comboId.id
   http_method             = aws_api_gateway_method.pedido_pedidoId_combo_comboId_delete.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/pedido-combo-endpoint/{pedidoId}/{comboId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/pedido-combo-endpoint/{pedidoId}/{comboId}" # Substitua pelo URL real
   integration_http_method = "DELETE"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -510,7 +511,7 @@ resource "aws_api_gateway_integration" "preparacao_pedido_proximo_integration" {
   resource_id             = aws_api_gateway_resource.preparacao_pedido_proximo.id
   http_method             = aws_api_gateway_method.preparacao_pedido_proximo_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/preparacao-pedido-proximo-endpoint" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/preparacao-pedido-proximo-endpoint" # Substitua pelo URL real
   integration_http_method = "GET"
 }
 
@@ -543,7 +544,7 @@ resource "aws_api_gateway_integration" "preparacao_pedido_pedidoId_iniciar_prepa
   resource_id             = aws_api_gateway_resource.preparacao_pedido_pedidoId_iniciar_preparacao.id
   http_method             = aws_api_gateway_method.preparacao_pedido_pedidoId_iniciar_preparacao_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/preparacao-pedido-iniciar-preparacao/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/preparacao-pedido-iniciar-preparacao/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "PUT"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -573,7 +574,7 @@ resource "aws_api_gateway_integration" "preparacao_pedido_pedidoId_finalizar_pre
   resource_id             = aws_api_gateway_resource.preparacao_pedido_pedidoId_finalizar_preparacao.id
   http_method             = aws_api_gateway_method.preparacao_pedido_pedidoId_finalizar_preparacao_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/preparacao-pedido-finalizar-preparacao/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/preparacao-pedido-finalizar-preparacao/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "PUT"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -603,7 +604,7 @@ resource "aws_api_gateway_integration" "preparacao_pedido_pedidoId_entregar_inte
   resource_id             = aws_api_gateway_resource.preparacao_pedido_pedidoId_entregar.id
   http_method             = aws_api_gateway_method.preparacao_pedido_pedidoId_entregar_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/preparacao-pedido-entregar/{pedidoId}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/preparacao-pedido-entregar/{pedidoId}" # Substitua pelo URL real
   integration_http_method = "PUT"
   request_parameters = {
     "integration.request.path.pedidoId" = "method.request.path.pedidoId"
@@ -636,7 +637,7 @@ resource "aws_api_gateway_integration" "produto_listar_integration" {
   resource_id             = aws_api_gateway_resource.produto_listar.id
   http_method             = aws_api_gateway_method.produto_listar_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/produto-listar-endpoint" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/produto-listar-endpoint" # Substitua pelo URL real
   integration_http_method = "GET"
 }
 
@@ -669,7 +670,7 @@ resource "aws_api_gateway_integration" "produto_buscar_id_integration" {
   resource_id             = aws_api_gateway_resource.produto_buscar_id.id
   http_method             = aws_api_gateway_method.produto_buscar_id_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/produto-buscar-endpoint/{id}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/produto-buscar-endpoint/{id}" # Substitua pelo URL real
   integration_http_method = "GET"
   request_parameters = {
     "integration.request.path.id" = "method.request.path.id"
@@ -699,7 +700,7 @@ resource "aws_api_gateway_integration" "produto_listar_categoria_integration" {
   resource_id             = aws_api_gateway_resource.produto_listar_categoria.id
   http_method             = aws_api_gateway_method.produto_listar_categoria_get.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/produto-listar-endpoint/{categoria}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/produto-listar-endpoint/{categoria}" # Substitua pelo URL real
   integration_http_method = "GET"
   request_parameters = {
     "integration.request.path.categoria" = "method.request.path.categoria"
@@ -735,7 +736,7 @@ resource "aws_api_gateway_integration" "produto_remover_id_integration" {
   resource_id             = aws_api_gateway_resource.produto_remover_id.id
   http_method             = aws_api_gateway_method.produto_remover_id_delete.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/produto-remover-endpoint/{id}" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/produto-remover-endpoint/{id}" # Substitua pelo URL real
   integration_http_method = "DELETE"
   request_parameters = {
     "integration.request.path.id" = "method.request.path.id"
@@ -763,7 +764,7 @@ resource "aws_api_gateway_integration" "produto_cadastrar_integration" {
   resource_id             = aws_api_gateway_resource.produto_cadastrar.id
   http_method             = aws_api_gateway_method.produto_cadastrar_post.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/produto-cadastrar-endpoint" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/produto-cadastrar-endpoint" # Substitua pelo URL real
   integration_http_method = "POST"
 }
 
@@ -787,7 +788,7 @@ resource "aws_api_gateway_integration" "produto_atualizar_integration" {
   resource_id             = aws_api_gateway_resource.produto_atualizar.id
   http_method             = aws_api_gateway_method.produto_atualizar_put.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://example.com/produto-atualizar-endpoint" # Substitua pelo URL real
+  uri                     = "${aws_eks_cluster.eks-cluster.endpoint}:30000/produto-atualizar-endpoint" # Substitua pelo URL real
   integration_http_method = "PUT"
 }
 
