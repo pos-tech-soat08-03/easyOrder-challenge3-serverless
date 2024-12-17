@@ -25,11 +25,11 @@
 
 variable "bucket" {
   description = "The S3 bucket to store the Terraform state file"
-  default     = "terraform-state-easyorder"
+  #default     = "terraform-state-easyorder"
 }
 variable "key" {
   description = "The S3 key to store the Terraform state file"
-  default     = "easyorder-infra/terraform.tfstate"
+  #default     = "easyorder-infra/terraform.tfstate"
 }
 variable "region" {
   description = "The S3 region to store the Terraform state file"
@@ -37,12 +37,17 @@ variable "region" {
 }
 
 variable "bucket_database" {
-  description = "Bucket S3 para state do Terraform - Infra"
 }
 
 variable "key_database" {
-  description = "Bucket S3 para state do Terraform - Infra"
 }
+
+variable "bucket_infra" {
+}
+
+variable "key_infra" {
+}
+
 
 data "terraform_remote_state" "easyorder-database" {
   backend = "s3"
@@ -53,9 +58,22 @@ data "terraform_remote_state" "easyorder-database" {
   }
 }
 
-variable "rds_host" {
-  default = data.terraform_remote_state.easyorder-database.outputs.rds_host
+data "terraform_remote_state" "easyorder-infra" {
+  backend = "s3"
+  config = {
+    bucket = var.bucket_infra
+    key    = var.key_infra
+    region = var.region
+  }
 }
-variable "db_username" {}
-variable "db_password" {}
-variable "db_name" {}
+
+
+# variable "rds_host" {}
+# variable "db_username" {}
+# variable "db_password" {}
+# variable "db_name" {}
+
+variable "lb_endpoint" {
+  type = string
+  default = "http://a79279f5efe364871a2203d0c5a36801-1185303877.us-east-1.elb.amazonaws.com"
+}	
