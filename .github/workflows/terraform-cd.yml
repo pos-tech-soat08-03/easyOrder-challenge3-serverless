@@ -84,6 +84,7 @@ jobs:
           db_password     = "${{ secrets.MYSQL_PASSWORD }}"
           bucket_infra    = "${{ github.event.inputs.aws_backend_bucket }}"
           key_infra       = "easyorder-infra/terraform.tfstate"
+          accountIdVoclabs= "${{ github.event.inputs.aws_account_id }}"
           EOF
     
     - name: Terraform Init
