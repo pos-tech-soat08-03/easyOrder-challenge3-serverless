@@ -1,14 +1,16 @@
-# data "aws_iam_role" "labrole" {
-#   name = "LabRole"
-# }
+data "aws_iam_role" "labrole" {
+  name = "LabRole"
+}
 
 #variable "backendBucketVoclabs" {
 #  description = "Bucket para armazenamento de arquivos de backend"
 #}
 
-# variable "accountIdVoclabs" {
-#   description = "ID da conta AWS"
-# }
+variable "accountIdVoclabs" {
+  description = "ID da conta AWS"
+}
+
+
 # variable "accessConfig" {
 #   default = "API_AND_CONFIG_MAP"
 # }
@@ -23,14 +25,14 @@
 # }
 
 
-variable "bucket" {
-  description = "The S3 bucket to store the Terraform state file"
-  #default     = "terraform-state-easyorder"
-}
-variable "key" {
-  description = "The S3 key to store the Terraform state file"
-  #default     = "easyorder-infra/terraform.tfstate"
-}
+# variable "bucket" {
+#   description = "The S3 bucket to store the Terraform state file"
+#   #default     = "terraform-state-easyorder"
+# }
+# variable "key" {
+#   description = "The S3 key to store the Terraform state file"
+#   #default     = "easyorder-infra/terraform.tfstate"
+# }
 variable "region" {
   description = "The S3 region to store the Terraform state file"
   default     = "us-east-1"
@@ -66,7 +68,6 @@ data "terraform_remote_state" "easyorder-infra" {
     region = var.region
   }
 }
-
 
 # variable "rds_host" {}
 # variable "db_username" {}

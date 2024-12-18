@@ -146,34 +146,34 @@ resource "aws_api_gateway_integration" "cliente_listar_integration" {
   integration_http_method = "GET"
 }
 
-# # /cliente/auth/{cpf} - sem autenticação, integração com Lambda
-# resource "aws_api_gateway_resource" "cliente_auth" {
-#   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
-#   parent_id   = aws_api_gateway_resource.endpoints_cliente.id
-#   path_part   = "auth"
-# }
-# resource "aws_api_gateway_resource" "cliente_auth_cpf" {
-#   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
-#   parent_id   = aws_api_gateway_resource.cliente_auth.id
-#   path_part   = "{cpf}"
-# }
-# resource "aws_api_gateway_method" "cliente_auth_cpf" {
-#   rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
-#   resource_id   = aws_api_gateway_resource.cliente_auth_cpf.id
-#   http_method   = "GET"
-#   authorization = "NONE"
-# }
-# resource "aws_api_gateway_integration" "cliente_auth_cpf_integration" {
-#   rest_api_id             = aws_api_gateway_rest_api.api_gateway.id
-#   resource_id             = aws_api_gateway_resource.cliente_auth_cpf.id
-#   http_method             = aws_api_gateway_method.cliente_auth_cpf.http_method
-#   integration_http_method = "POST" 
-#   type                    = "AWS_PROXY"
-#   uri                     = aws_lambda_function.cpf_lookup.invoke_arn
-#   depends_on              = [
-#     aws_api_gateway_method.cliente_auth_cpf,
-#   ]
-# }
+# /cliente/auth/{cpf} - sem autenticação, integração com Lambda
+resource "aws_api_gateway_resource" "cliente_auth" {
+  rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+  parent_id   = aws_api_gateway_resource.endpoints_cliente.id
+  path_part   = "auth"
+}
+resource "aws_api_gateway_resource" "cliente_auth_cpf" {
+  rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+  parent_id   = aws_api_gateway_resource.cliente_auth.id
+  path_part   = "{cpf}"
+}
+resource "aws_api_gateway_method" "cliente_auth_cpf" {
+  rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
+  resource_id   = aws_api_gateway_resource.cliente_auth_cpf.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+resource "aws_api_gateway_integration" "cliente_auth_cpf_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.api_gateway.id
+  resource_id             = aws_api_gateway_resource.cliente_auth_cpf.id
+  http_method             = aws_api_gateway_method.cliente_auth_cpf.http_method
+  integration_http_method = "POST" 
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.cpf_lookup.invoke_arn
+  depends_on              = [
+    aws_api_gateway_method.cliente_auth_cpf,
+  ]
+}
 
 # /pagamento/ - recurso pai
 resource "aws_api_gateway_resource" "pagamento" {
@@ -871,9 +871,9 @@ resource "aws_api_gateway_deployment" "api_deployment" {
     create_before_destroy = true
   }
   
-  # triggers = {
-  #   redeployment = sha1(jsonencode(aws_api_gateway_integration.cliente_auth_cpf_integration))
-  # }
+  triggers = {
+    redeployment = sha1(jsonencode(aws_api_gateway_integration.cliente_auth_cpf_integration))
+  }
 }
 
 resource "aws_api_gateway_stage" "api_stage" {
@@ -883,14 +883,13 @@ resource "aws_api_gateway_stage" "api_stage" {
   depends_on = [ aws_api_gateway_deployment.api_deployment ]
 }
 
-# resource "aws_lambda_permission" "allow_api_gateway" {
-#   statement_id  = "AllowExecutionFromAPIGateway"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.cpf_lookup.arn
-#   principal     = "apigateway.amazonaws.com"
-
-#   source_arn = "${aws_api_gateway_rest_api.cpf_api.execution_arn}/*/*"
-# }
+resource "aws_lambda_permission" "allow_api_gateway" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.cpf_lookup.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_api_gateway_rest_api.api_gateway.execution_arn}/*/*"
+}
 
 # Outputs API Gateway
 output "rest_api_id" {
@@ -901,6 +900,6 @@ output "rest_api_url" {
   value = aws_api_gateway_stage.api_stage.invoke_url
 }
 
-# output "lambda_endpoint_url" {
-#   value = "https://${aws_api_gateway_rest_api.cpf_api.id}.execute-api.${var.region}.amazonaws.com/${aws_api_gateway_stage.prod_stage.stage_name}/${aws_lambda_function.cpf_lookup.function_name}"
-# }
+output "lambda_endpoint_url" {
+  value = "https://${aws_api_gateway_rest_api.api_gateway.id}.execute-api.${var.region}.amazonaws.com/${aws_api_gateway_stage.api_stage.stage_name}/${aws_lambda_function.cpf_lookup.function_name}"
+}
