@@ -75,6 +75,6 @@ data "terraform_remote_state" "easyorder-infra" {
 # variable "db_name" {}
 
 variable "lb_endpoint" {
-  type = string
+  type    = string
   default = "http://a79279f5efe364871a2203d0c5a36801-1185303877.us-east-1.elb.amazonaws.com"
-}	
+} 
